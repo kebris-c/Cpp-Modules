@@ -1,6 +1,6 @@
 NAME = bsp
 
-CXX = c++
+CXX = g++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
 SRC_DIR = src
