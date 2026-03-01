@@ -5,7 +5,7 @@ Fixed::Fixed() : _rawBits(0)
 {
 }
 
-Fixed::Fixed(const int number) : _rawBits(number << _fractionalBits)
+Fixed::Fixed(const int number) : _rawBits(number * (1 << _fractionalBits))
 {
 }
 
@@ -101,7 +101,7 @@ Fixed Fixed::operator*(const Fixed &other) const
 	long product;
 
 	product = static_cast<long>(this->_rawBits) * other._rawBits;
-	result.setRawBits(static_cast<int>(product >> _fractionalBits));
+	result.setRawBits(static_cast<int>(product / (1 << _fractionalBits)));
 	return (result);
 }
 
@@ -110,7 +110,7 @@ Fixed Fixed::operator/(const Fixed &other) const
 	Fixed result;
 	long scaled;
 
-	scaled = static_cast<long>(this->_rawBits) << _fractionalBits;
+	scaled = static_cast<long>(this->_rawBits) * (1 << _fractionalBits);
 	result.setRawBits(static_cast<int>(scaled / other._rawBits));
 	return (result);
 }
