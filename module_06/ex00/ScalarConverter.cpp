@@ -5,7 +5,31 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <cctype>
+
+static void writeScaled(float value)
+{
+	std::ostringstream out;
+	out << value;
+	std::string text = out.str();
+	if (text.find('.') == std::string::npos && text.find('e') == std::string::npos &&
+		text.find('E') == std::string::npos)
+		text += ".0";
+	std::cout << text << "f" << std::endl;
+}
+
+static void writeScaled(double value)
+{
+	std::ostringstream out;
+	out << value;
+	std::string text = out.str();
+	if (text.find('.') == std::string::npos && text.find('e') == std::string::npos &&
+		text.find('E') == std::string::npos)
+		text += ".0";
+	std::cout << text << std::endl;
+}
 
 ScalarConverter::ScalarConverter()
 {
@@ -52,18 +76,18 @@ void ScalarConverter::printFromDouble(double d)
 	else
 		std::cout << "int: " << static_cast<int>(d) << std::endl;
 
-	float f = static_cast<float>(d);
 	std::cout << "float: ";
-	if (std::isnan(f))
+	if (std::isnan(d))
 		std::cout << "nanf" << std::endl;
-	else if (std::isinf(f))
-		std::cout << (f < 0 ? "-" : "+") << "inff" << std::endl;
+	else if (std::isinf(d))
+		std::cout << (d < 0 ? "-" : "+") << "inff" << std::endl;
 	else
 	{
-		std::cout << f;
-		if (f == static_cast<int>(f))
-			std::cout << ".0";
-		std::cout << "f" << std::endl;
+		float f = static_cast<float>(d);
+		if (std::isinf(f))
+			std::cout << "impossible" << std::endl;
+		else
+			writeScaled(f);
 	}
 
 	std::cout << "double: ";
@@ -72,12 +96,7 @@ void ScalarConverter::printFromDouble(double d)
 	else if (std::isinf(d))
 		std::cout << (d < 0 ? "-" : "+") << "inf" << std::endl;
 	else
-	{
-		std::cout << d;
-		if (d == static_cast<int>(d))
-			std::cout << ".0";
-		std::cout << std::endl;
-	}
+		writeScaled(d);
 }
 
 void ScalarConverter::convert(const std::string &literal)
@@ -96,14 +115,10 @@ void ScalarConverter::convert(const std::string &literal)
 		char c = literal[1];
 		std::cout << "char: '" << c << "'" << std::endl;
 		std::cout << "int: " << static_cast<int>(c) << std::endl;
-		std::cout << "float: " << static_cast<float>(c);
-		if (static_cast<float>(c) == static_cast<int>(static_cast<float>(c)))
-			std::cout << ".0";
-		std::cout << "f" << std::endl;
-		std::cout << "double: " << static_cast<double>(c);
-		if (static_cast<double>(c) == static_cast<int>(static_cast<double>(c)))
-			std::cout << ".0";
-		std::cout << std::endl;
+		std::cout << "float: ";
+		writeScaled(static_cast<float>(c));
+		std::cout << "double: ";
+		writeScaled(static_cast<double>(c));
 		return;
 	}
 	if (literal.size() == 1 && !std::isdigit(literal[0]))
@@ -111,14 +126,10 @@ void ScalarConverter::convert(const std::string &literal)
 		char c = literal[0];
 		std::cout << "char: '" << c << "'" << std::endl;
 		std::cout << "int: " << static_cast<int>(c) << std::endl;
-		std::cout << "float: " << static_cast<float>(c);
-		if (static_cast<float>(c) == static_cast<int>(static_cast<float>(c)))
-			std::cout << ".0";
-		std::cout << "f" << std::endl;
-		std::cout << "double: " << static_cast<double>(c);
-		if (static_cast<double>(c) == static_cast<int>(static_cast<double>(c)))
-			std::cout << ".0";
-		std::cout << std::endl;
+		std::cout << "float: ";
+		writeScaled(static_cast<float>(c));
+		std::cout << "double: ";
+		writeScaled(static_cast<double>(c));
 		return;
 	}
 
